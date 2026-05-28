@@ -11,6 +11,7 @@ interface ScrollRevealProps {
   delay?: number
   duration?: number
   className?: string
+  style?: React.CSSProperties
   once?: boolean
   threshold?: number
 }
@@ -44,12 +45,14 @@ export function ScrollReveal({
   delay = 0,
   duration = 0.7,
   className,
+  style,
   once = true,
   threshold = 0.1,
 }: ScrollRevealProps) {
   return (
     <motion.div
       className={className}
+      style={style}
       initial="hidden"
       whileInView="visible"
       viewport={{ once, amount: threshold }}
