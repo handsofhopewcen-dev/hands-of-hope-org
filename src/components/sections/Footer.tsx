@@ -14,7 +14,7 @@ const navLinks = [
   { href: '#contact', label: 'Contact' },
 ]
 
-const involvedLinks = [
+const involvedLinks: { href: string; label: string; external?: boolean }[] = [
   { href: '#get-help', label: 'Request Support' },
   { href: '#get-help', label: 'Volunteer' },
   { href: '#get-help', label: 'Partnerships' },
