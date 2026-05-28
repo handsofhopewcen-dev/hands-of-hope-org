@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin Dashboard — Hands of Hope</title>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--plum:#5A2D66;--plum-deep:#3D1D47;--plum-light:#7B4A8A;--rose:#B85C7A;--gold:#D7A14A;--cream:#F8F4EF;--warm:#FDFBF8;--mist:#EEE7F2;--ink:#1E1218;--soft:#5E4B57;--line:rgba(90,45,102,0.1);--success:#2E7D52;--warning:#B45309;--danger:#9B1C1C;--info:#1D4E89;--sidebar-w:260px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Jost',sans-serif;background:#F4F1F8;color:var(--ink);min-height:100vh;overflow-x:hidden;}
+
+/* LOGIN */
+.login-screen{position:fixed;inset:0;background:linear-gradient(135deg,var(--plum-deep) 0%,var(--plum) 60%,var(--rose) 100%);display:flex;align-items:center;justify-content:center;z-index:9999;}
+.login-screen.hidden{display:none;}
+.login-box{background:#fff;border-radius:1.5rem;padding:2.8rem;width:min(420px,92vw);box-shadow:0 20px 60px rgba(14,6,12,.25);}
+.login-logo{text-align:center;margin-bottom:2rem;}
+.login-logo h2{font-size:1.5rem;font-weight:700;color:var(--plum);}
+.login-logo p{font-size:.82rem;color:var(--soft);margin-top:.3rem;}
+.login-label{display:block;font-size:.82rem;font-weight:600;color:var(--plum);margin-bottom:.4rem;}
+.login-input{width:100%;border:1.5px solid var(--line);border-radius:.8rem;padding:.85rem 1rem;font-family:'Jost',sans-serif;font-size:.92rem;outline:none;margin-bottom:1.2rem;transition:.2s;}
+.login-input:focus{border-color:var(--plum);box-shadow:0 0 0 3px rgba(90,45,102,.1);}
+.login-btn{width:100%;background:var(--plum);color:#fff;border:none;border-radius:.8rem;padding:1rem;font-weight:600;font-size:.95rem;cursor:pointer;font-family:'Jost',sans-serif;transition:.3s;}
+.login-btn:hover{background:var(--plum-deep);}
+.login-err{display:none;background:#FEE2E2;color:#991B1B;border-radius:.6rem;padding:.7rem 1rem;font-size:.85rem;margin-bottom:1rem;text-align:center;}
+
+/* LAYOUT */
+.app{display:none;min-height:100vh;}
+.app.visible{display:flex;}
+.sidebar{width:var(--sidebar-w);min-height:100vh;background:var(--plum-deep);position:fixed;top:0;left:0;display:flex;flex-direction:column;z-index:100;transition:.3s;}
+.sidebar-logo{padding:1.5rem 1.5rem 1rem;border-bottom:1px solid rgba(255,255,255,.08);}
+.sidebar-logo h2{color:#fff;font-size:1.1rem;font-weight:700;}
+.sidebar-logo small{color:rgba(255,255,255,.45);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;}
+.nav-section{padding:.8rem 0;}
+.nav-label{padding:.4rem 1.5rem;font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.35);font-weight:600;}
+.nav-item{display:flex;align-items:center;gap:.8rem;padding:.8rem 1.5rem;color:rgba(255,255,255,.65);cursor:pointer;transition:.2s;font-size:.88rem;border:none;background:none;width:100%;text-align:left;font-family:'Jost',sans-serif;}
+.nav-item:hover,.nav-item.active{background:rgba(255,255,255,.08);color:#fff;}
+.nav-item.active{border-left:3px solid var(--rose);}
+.nav-icon{font-size:1.1rem;width:20px;text-align:center;}
+.sidebar-bottom{margin-top:auto;padding:1.5rem;border-top:1px solid rgba(255,255,255,.08);}
+.admin-user{display:flex;align-items:center;gap:.8rem;}
+.admin-avatar{width:36px;height:36px;border-radius:50%;background:var(--rose);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.85rem;}
+.admin-info{flex:1;}
+.admin-info strong{display:block;color:#fff;font-size:.85rem;}
+.admin-info span{color:rgba(255,255,255,.45);font-size:.75rem;}
+.logout-btn{background:none;border:none;color:rgba(255,255,255,.45);cursor:pointer;font-size:.8rem;margin-top:.5rem;font-family:'Jost',sans-serif;padding:0;}
+.logout-btn:hover{color:#fff;}
+
+/* MAIN */
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{background:#fff;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50;}
+.topbar-title{font-weight:600;font-size:1rem;color:var(--ink);}
+.topbar-right{display:flex;align-items:center;gap:1rem;}
+.notif-dot{position:relative;}
+.notif-dot::after{content:'3';position:absolute;top:-4px;right:-6px;background:var(--rose);color:#fff;font-size:.6rem;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;}
+.content{padding:2rem;flex:1;}
+
+/* PAGES */
+.page{display:none;}
+.page.active{display:block;}
+
+/* STATS GRID */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-bottom:2rem;}
+.stat-card{background:#fff;border-radius:1.2rem;padding:1.5rem;border:1px solid var(--line);position:relative;overflow:hidden;}
+.stat-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--rose);}
+.stat-card.blue::before{background:var(--info);}
+.stat-card.green::before{background:var(--success);}
+.stat-card.gold::before{background:var(--gold);}
+.stat-label{font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--soft);margin-bottom:.5rem;}
+.stat-num{font-size:2.2rem;font-weight:700;color:var(--plum);line-height:1;}
+.stat-sub{font-size:.78rem;color:var(--soft);margin-top:.4rem;}
+.stat-icon{position:absolute;bottom:1rem;right:1.2rem;font-size:2rem;opacity:.12;}
+
+/* TABLES */
+.table-card{background:#fff;border-radius:1.2rem;border:1px solid var(--line);overflow:hidden;margin-bottom:1.5rem;}
+.table-header{padding:1.2rem 1.5rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);}
+.table-title{font-weight:600;font-size:.95rem;}
+.btn-sm{padding:.45rem 1rem;border-radius:100px;font-size:.8rem;font-weight:600;cursor:pointer;border:none;font-family:'Jost',sans-serif;transition:.2s;}
+.btn-primary-sm{background:var(--plum);color:#fff;}
+.btn-primary-sm:hover{background:var(--plum-deep);}
+.btn-outline-sm{background:transparent;border:1.5px solid var(--line);color:var(--soft);}
+.btn-outline-sm:hover{border-color:var(--plum);color:var(--plum);}
+.btn-success-sm{background:var(--success);color:#fff;}
+.btn-danger-sm{background:var(--danger);color:#fff;}
+table{width:100%;border-collapse:collapse;}
+thead th{background:#F9F6FC;padding:.9rem 1.2rem;text-align:left;font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--soft);border-bottom:1px solid var(--line);}
+tbody td{padding:.95rem 1.2rem;font-size:.88rem;border-bottom:1px solid var(--line);vertical-align:middle;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:#FDFBFF;}
+.badge{display:inline-flex;align-items:center;padding:.25rem .7rem;border-radius:100px;font-size:.75rem;font-weight:600;gap:.3rem;}
+.badge-new{background:#EEE7F2;color:var(--plum);}
+.badge-review{background:#FEF3C7;color:#92400E;}
+.badge-resolved{background:#D1FAE5;color:#065F46;}
+.badge-active{background:#D1FAE5;color:#065F46;}
+.badge-pending{background:#FEF3C7;color:#92400E;}
+.badge-inactive{background:#F3F4F6;color:#6B7280;}
+.badge-high{background:#FEE2E2;color:#991B1B;}
+.badge-medium{background:#FEF3C7;color:#92400E;}
+.badge-low{background:#D1FAE5;color:#065F46;}
+.table-search{padding:.5rem 1rem;border:1.5px solid var(--line);border-radius:.8rem;font-family:'Jost',sans-serif;font-size:.85rem;outline:none;width:220px;}
+.table-search:focus{border-color:var(--plum);}
+
+/* FORM MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(14,6,12,.5);z-index:200;display:none;align-items:center;justify-content:center;padding:1rem;}
+.modal-overlay.open{display:flex;}
+.modal{background:#fff;border-radius:1.4rem;padding:2rem;width:min(560px,100%);max-height:90vh;overflow-y:auto;}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;}
+.modal-title{font-weight:700;font-size:1rem;color:var(--plum);}
+.modal-close{background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--soft);line-height:1;}
+.modal-label{display:block;font-size:.82rem;font-weight:600;color:var(--plum);margin-bottom:.4rem;}
+.modal-input{width:100%;border:1.5px solid var(--line);border-radius:.8rem;padding:.8rem 1rem;font-family:'Jost',sans-serif;font-size:.9rem;outline:none;margin-bottom:1rem;transition:.2s;}
+.modal-input:focus{border-color:var(--plum);}
+.modal-textarea{width:100%;border:1.5px solid var(--line);border-radius:.8rem;padding:.8rem 1rem;font-family:'Jost',sans-serif;font-size:.9rem;outline:none;margin-bottom:1rem;resize:vertical;min-height:100px;}
+.modal-footer{display:flex;gap:.8rem;justify-content:flex-end;margin-top:1rem;}
+
+/* ANALYTICS */
+.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+.chart-card{background:#fff;border-radius:1.2rem;border:1px solid var(--line);padding:1.5rem;}
+.chart-title{font-weight:600;font-size:.9rem;margin-bottom:1.2rem;color:var(--plum);}
+.bar-chart{display:flex;align-items:flex-end;gap:.5rem;height:140px;}
+.bar-wrap{display:flex;flex-direction:column;align-items:center;gap:.4rem;flex:1;}
+.bar{border-radius:.4rem .4rem 0 0;width:100%;transition:.6s ease;min-height:4px;}
+.bar-label{font-size:.72rem;color:var(--soft);text-align:center;}
+.bar-val{font-size:.75rem;font-weight:600;color:var(--plum);}
+.donut-wrap{display:flex;align-items:center;gap:1.5rem;}
+.donut-legend{display:flex;flex-direction:column;gap:.6rem;flex:1;}
+.legend-item{display:flex;align-items:center;gap:.6rem;font-size:.82rem;}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.activity-feed{display:flex;flex-direction:column;gap:0;}
+.activity-item{display:flex;gap:.8rem;align-items:flex-start;padding:.9rem 0;border-bottom:1px solid var(--line);}
+.activity-item:last-child{border-bottom:none;}
+.a-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;}
+.a-text{flex:1;}
+.a-text strong{display:block;font-size:.85rem;font-weight:600;}
+.a-text span{font-size:.78rem;color:var(--soft);}
+
+/* CASE NOTES */
+.notes-grid{display:grid;grid-template-columns:300px 1fr;gap:1.5rem;}
+.notes-list{background:#fff;border-radius:1.2rem;border:1px solid var(--line);overflow:hidden;}
+.notes-list-header{padding:1rem 1.2rem;border-bottom:1px solid var(--line);font-weight:600;font-size:.88rem;display:flex;justify-content:space-between;align-items:center;}
+.note-item{padding:1rem 1.2rem;border-bottom:1px solid var(--line);cursor:pointer;transition:.2s;}
+.note-item:hover{background:#F9F6FC;}
+.note-item.active{background:var(--mist);}
+.note-item-name{font-weight:600;font-size:.88rem;color:var(--plum);}
+.note-item-preview{font-size:.78rem;color:var(--soft);margin-top:.2rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.note-item-date{font-size:.72rem;color:var(--soft);margin-top:.2rem;}
+.note-detail{background:#fff;border-radius:1.2rem;border:1px solid var(--line);padding:1.5rem;display:flex;flex-direction:column;}
+.note-detail-header{padding-bottom:1rem;border-bottom:1px solid var(--line);margin-bottom:1rem;}
+.note-detail-name{font-weight:700;font-size:1rem;color:var(--plum);}
+.note-entry{background:#F9F6FC;border-radius:.8rem;padding:1rem;margin-bottom:.8rem;border-left:3px solid var(--rose);}
+.note-entry-meta{font-size:.72rem;color:var(--soft);margin-bottom:.4rem;}
+.note-entry-text{font-size:.88rem;line-height:1.7;}
+.note-add-area{margin-top:auto;padding-top:1rem;border-top:1px solid var(--line);}
+.note-textarea{width:100%;border:1.5px solid var(--line);border-radius:.8rem;padding:.8rem;font-family:'Jost',sans-serif;font-size:.88rem;outline:none;resize:none;height:80px;}
+.note-textarea:focus{border-color:var(--plum);}
+
+/* WORKFLOWS */
+.workflow-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;}
+.workflow-card{background:#fff;border-radius:1.2rem;border:1px solid var(--line);padding:1.5rem;}
+.workflow-icon{font-size:1.6rem;margin-bottom:.8rem;}
+.workflow-name{font-weight:700;font-size:.95rem;color:var(--plum);margin-bottom:.4rem;}
+.workflow-desc{font-size:.82rem;line-height:1.7;color:var(--soft);margin-bottom:1rem;}
+.toggle-wrap{display:flex;align-items:center;justify-content:space-between;}
+.toggle{position:relative;width:40px;height:22px;}
+.toggle input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;inset:0;background:#D1D5DB;border-radius:100px;cursor:pointer;transition:.3s;}
+.toggle-slider::before{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:3px;left:3px;transition:.3s;}
+.toggle input:checked+.toggle-slider{background:var(--plum);}
+.toggle input:checked+.toggle-slider::before{transform:translateX(18px);}
+
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%);}
+  .main{margin-left:0;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .analytics-grid{grid-template-columns:1fr;}
+  .notes-grid{grid-template-columns:1fr;}
+  .workflow-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">
+      <h2>💜 Hands of Hope</h2>
+      <p>Staff & Admin Portal</p>
+    </div>
+    <div class="login-err" id="loginErr">Incorrect password. Please try again.</div>
+    <label class="login-label">Username</label>
+    <input class="login-input" id="loginUser" type="text" placeholder="admin@handsofhopewcen.org">
+    <label class="login-label">Password</label>
+    <input class="login-input" id="loginPass" type="password" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Sign In to Dashboard</button>
+    <p style="font-size:.75rem;color:var(--soft);margin-top:1rem;text-align:center;">Demo: any username + password "hope2026"</p>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <h2>Hands of Hope</h2>
+      <small>Admin Dashboard</small>
+    </div>
+    <div style="flex:1;overflow-y:auto;">
+      <div class="nav-section">
+        <div class="nav-label">Overview</div>
+        <button class="nav-item active" onclick="showPage('overview',this)"><span class="nav-icon">📊</span> Dashboard</button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">People</div>
+        <button class="nav-item" onclick="showPage('volunteers',this)"><span class="nav-icon">🙋</span> Volunteers</button>
+        <button class="nav-item" onclick="showPage('donors',this)"><span class="nav-icon">💝</span> Donors</button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Case Management</div>
+        <button class="nav-item" onclick="showPage('intake',this)"><span class="nav-icon">🆘</span> Intake</button>
+        <button class="nav-item" onclick="showPage('casenotes',this)"><span class="nav-icon">📝</span> Case Notes</button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Operations</div>
+        <button class="nav-item" onclick="showPage('workflows',this)"><span class="nav-icon">⚙️</span> Workflows</button>
+        <button class="nav-item" onclick="showPage('analytics',this)"><span class="nav-icon">📈</span> Analytics</button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Website</div>
+        <button class="nav-item" onclick="window.open('index.html','_blank')"><span class="nav-icon">🌐</span> View Website</button>
+      </div>
+    </div>
+    <div class="sidebar-bottom">
+      <div class="admin-user">
+        <div class="admin-avatar">AD</div>
+        <div class="admin-info">
+          <strong>Admin</strong>
+          <span>Hands of Hope</span>
+        </div>
+      </div>
+      <button class="logout-btn" onclick="doLogout()">Sign Out</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="pageTitle">Dashboard Overview</div>
+      <div class="topbar-right">
+        <div class="notif-dot" style="font-size:1.2rem;cursor:pointer;" title="3 new submissions">🔔</div>
+        <div style="font-size:.82rem;color:var(--soft);">Saturday, May 23, 2026</div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- OVERVIEW -->
+      <div class="page active" id="page-overview">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Active Cases</div>
+            <div class="stat-num">24</div>
+            <div class="stat-sub">↑ 4 new this week</div>
+            <div class="stat-icon">🆘</div>
+          </div>
+          <div class="stat-card blue">
+            <div class="stat-label">Active Volunteers</div>
+            <div class="stat-num">37</div>
+            <div class="stat-sub">↑ 6 pending approval</div>
+            <div class="stat-icon">🙋</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-label">Families Served</div>
+            <div class="stat-num">214</div>
+            <div class="stat-sub">↑ 18 this month</div>
+            <div class="stat-icon">👨‍👩‍👧</div>
+          </div>
+          <div class="stat-card gold">
+            <div class="stat-label">Donations (May)</div>
+            <div class="stat-num">$4,820</div>
+            <div class="stat-sub">↑ 22% vs last month</div>
+            <div class="stat-icon">💝</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:1.5rem;">
+          <div class="table-card">
+            <div class="table-header">
+              <div class="table-title">Recent Intake Submissions</div>
+              <button class="btn-sm btn-primary-sm" onclick="showPage('intake',document.querySelector('[onclick*=intake]'))">View All</button>
+            </div>
+            <table>
+              <thead><tr><th>Name</th><th>Type</th><th>Status</th><th>Date</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Maria G.</strong></td><td>Postpartum Support</td><td><span class="badge badge-new">New</span></td><td>May 23</td></tr>
+                <tr><td><strong>Tamara B.</strong></td><td>Crisis Assistance</td><td><span class="badge badge-high">High Priority</span></td><td>May 22</td></tr>
+                <tr><td><strong>Priya S.</strong></td><td>Developmental Resources</td><td><span class="badge badge-review">In Review</span></td><td>May 21</td></tr>
+                <tr><td><strong>Keisha L.</strong></td><td>Life Skills Training</td><td><span class="badge badge-resolved">Resolved</span></td><td>May 20</td></tr>
+                <tr><td><strong>Destiny R.</strong></td><td>Emergency Relief</td><td><span class="badge badge-review">In Review</span></td><td>May 19</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Recent Activity</div>
+            <div class="activity-feed">
+              <div class="activity-item"><div class="a-icon" style="background:#EEE7F2;">🆘</div><div class="a-text"><strong>New intake — Maria G.</strong><span>Postpartum support request · 2h ago</span></div></div>
+              <div class="activity-item"><div class="a-icon" style="background:#D1FAE5;">✅</div><div class="a-text"><strong>Volunteer approved</strong><span>Ashley M. — Outreach Partner · 4h ago</span></div></div>
+              <div class="activity-item"><div class="a-icon" style="background:#FEF3C7;">💝</div><div class="a-text"><strong>Donation received — $150</strong><span>Anonymous · via Zeffy · 6h ago</span></div></div>
+              <div class="activity-item"><div class="a-icon" style="background:#EEE7F2;">📝</div><div class="a-text"><strong>Case note added</strong><span>Tamara B. — Crisis case · 8h ago</span></div></div>
+              <div class="activity-item"><div class="a-icon" style="background:#D1FAE5;">✅</div><div class="a-text"><strong>Case resolved</strong><span>Keisha L. — Life Skills · Yesterday</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VOLUNTEERS -->
+      <div class="page" id="page-volunteers">
+        <div class="table-card">
+          <div class="table-header">
+            <div class="table-title">Volunteer Management</div>
+            <div style="display:flex;gap:.8rem;align-items:center;">
+              <input class="table-search" placeholder="Search volunteers..." oninput="filterTable(this,'vol-tbody')">
+              <button class="btn-sm btn-primary-sm" onclick="openModal('addVolModal')">+ Add Volunteer</button>
+            </div>
+          </div>
+          <table>
+            <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead>
+            <tbody id="vol-tbody">
+              <tr><td><strong>Ashley McCreary</strong></td><td>ashley@email.com</td><td>Outreach Partner</td><td><span class="badge badge-active">Active</span></td><td>Jan 2026</td><td><button class="btn-sm btn-outline-sm" onclick="openNoteModal('Ashley McCreary')">Notes</button></td></tr>
+              <tr><td><strong>Jordan Williams</strong></td><td>jordan@email.com</td><td>Childcare Support</td><td><span class="badge badge-active">Active</span></td><td>Feb 2026</td><td><button class="btn-sm btn-outline-sm" onclick="openNoteModal('Jordan Williams')">Notes</button></td></tr>
+              <tr><td><strong>Simone Davis</strong></td><td>simone@email.com</td><td>Workshop Facilitator</td><td><span class="badge badge-pending">Pending</span></td><td>May 2026</td><td><button class="btn-sm btn-success-sm" onclick="approveVol(this)">Approve</button></td></tr>
+              <tr><td><strong>Marcus Thompson</strong></td><td>marcus@email.com</td><td>Event Support</td><td><span class="badge badge-pending">Pending</span></td><td>May 2026</td><td><button class="btn-sm btn-success-sm" onclick="approveVol(this)">Approve</button></td></tr>
+              <tr><td><strong>Priya Patel</strong></td><td>priya@email.com</td><td>Mentor</td><td><span class="badge badge-active">Active</span></td><td>Mar 2026</td><td><button class="btn-sm btn-outline-sm" onclick="openNoteModal('Priya Patel')">Notes</button></td></tr>
+              <tr><td><strong>Deondra Harris</strong></td><td>deondra@email.com</td><td>Fundraising</td><td><span class="badge badge-inactive">Inactive</span></td><td>Dec 2025</td><td><button class="btn-sm btn-outline-sm">Reactivate</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- DONORS -->
+      <div class="page" id="page-donors">
+        <div class="table-card">
+          <div class="table-header">
+            <div class="table-title">Donor Tracking</div>
+            <div style="display:flex;gap:.8rem;align-items:center;">
+              <input class="table-search" placeholder="Search donors..." oninput="filterTable(this,'don-tbody')">
+              <button class="btn-sm btn-primary-sm" onclick="openModal('addDonorModal')">+ Add Donor</button>
+            </div>
+          </div>
+          <table>
+            <thead><tr><th>Name</th><th>Email</th><th>Total Given</th><th>Last Donation</th><th>Type</th><th>Tags</th></tr></thead>
+            <tbody id="don-tbody">
+              <tr><td><strong>Anonymous</strong></td><td>—</td><td>$150</td><td>May 23, 2026</td><td>One-time</td><td><span class="badge badge-new">New</span></td></tr>
+              <tr><td><strong>James & Carol B.</strong></td><td>jcarol@email.com</td><td>$1,200</td><td>May 15, 2026</td><td>Monthly</td><td><span class="badge badge-active">Champion</span></td></tr>
+              <tr><td><strong>Grace Church Houston</strong></td><td>giving@gracechurch.org</td><td>$3,500</td><td>Apr 30, 2026</td><td>Institutional</td><td><span class="badge badge-active">Partner</span></td></tr>
+              <tr><td><strong>Melissa A.</strong></td><td>melissa@email.com</td><td>$75</td><td>Mar 10, 2026</td><td>One-time</td><td>—</td></tr>
+              <tr><td><strong>Houston Community Fund</strong></td><td>grants@hcf.org</td><td>$5,000</td><td>Jan 1, 2026</td><td>Grant</td><td><span class="badge badge-active">Major</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- INTAKE -->
+      <div class="page" id="page-intake">
+        <div style="display:flex;gap:.8rem;margin-bottom:1.2rem;flex-wrap:wrap;">
+          <button class="btn-sm btn-primary-sm" onclick="filterIntake('all',this)">All</button>
+          <button class="btn-sm btn-outline-sm" onclick="filterIntake('New',this)">New</button>
+          <button class="btn-sm btn-outline-sm" onclick="filterIntake('In Review',this)">In Review</button>
+          <button class="btn-sm btn-outline-sm" onclick="filterIntake('Resolved',this)">Resolved</button>
+        </div>
+        <div class="table-card">
+          <div class="table-header">
+            <div class="table-title">Intake Management</div>
+            <div style="display:flex;gap:.8rem;align-items:center;">
+              <input class="table-search" placeholder="Search intake..." oninput="filterTable(this,'intake-tbody')">
+              <button class="btn-sm btn-primary-sm" onclick="openModal('addIntakeModal')">+ New Intake</button>
+            </div>
+          </div>
+          <table>
+            <thead><tr><th>Client</th><th>Support Type</th><th>Priority</th><th>Status</th><th>Date</th><th>Assigned To</th><th>Actions</th></tr></thead>
+            <tbody id="intake-tbody">
+              <tr data-status="New"><td><strong>Maria G.</strong></td><td>Postpartum Support</td><td><span class="badge badge-high">High</span></td><td><span class="badge badge-new">New</span></td><td>May 23</td><td>Unassigned</td><td><button class="btn-sm btn-primary-sm" onclick="openNoteModal('Maria G.')">Add Note</button></td></tr>
+              <tr data-status="In Review"><td><strong>Tamara B.</strong></td><td>Crisis Assistance</td><td><span class="badge badge-high">High</span></td><td><span class="badge badge-review">In Review</span></td><td>May 22</td><td>Ashley M.</td><td><button class="btn-sm btn-outline-sm" onclick="openNoteModal('Tamara B.')">Notes</button></td></tr>
+              <tr data-status="In Review"><td><strong>Priya S.</strong></td><td>Developmental Resources</td><td><span class="badge badge-medium">Medium</span></td><td><span class="badge badge-review">In Review</span></td><td>May 21</td><td>Jordan W.</td><td><button class="btn-sm btn-outline-sm" onclick="openNoteModal('Priya S.')">Notes</button></td></tr>
+              <tr data-status="Resolved"><td><strong>Keisha L.</strong></td><td>Life Skills Training</td><td><span class="badge badge-low">Low</span></td><td><span class="badge badge-resolved">Resolved</span></td><td>May 20</td><td>Priya P.</td><td><button class="btn-sm btn-outline-sm">View</button></td></tr>
+              <tr data-status="In Review"><td><strong>Destiny R.</strong></td><td>Emergency Relief</td><td><span class="badge badge-high">High</span></td><td><span class="badge badge-review">In Review</span></td><td>May 19</td><td>Ashley M.</td><td><button class="btn-sm btn-outline-sm" onclick="openNoteModal('Destiny R.')">Notes</button></td></tr>
+              <tr data-status="New"><td><strong>Courtney M.</strong></td><td>Postpartum Support</td><td><span class="badge badge-medium">Medium</span></td><td><span class="badge badge-new">New</span></td><td>May 18</td><td>Unassigned</td><td><button class="btn-sm btn-primary-sm" onclick="openNoteModal('Courtney M.')">Add Note</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CASE NOTES -->
+      <div class="page" id="page-casenotes">
+        <div class="notes-grid">
+          <div class="notes-list">
+            <div class="notes-list-header"><span>Active Cases</span><span style="font-size:.78rem;color:var(--soft);">24 total</span></div>
+            <div class="note-item active" onclick="selectCase(this,'Maria G.','Postpartum Support')">
+              <div class="note-item-name">Maria G.</div>
+              <div class="note-item-preview">New postpartum case — needs home visit...</div>
+              <div class="note-item-date">May 23, 2026</div>
+            </div>
+            <div class="note-item" onclick="selectCase(this,'Tamara B.','Crisis Assistance')">
+              <div class="note-item-name">Tamara B.</div>
+              <div class="note-item-preview">Crisis referral from St. Luke's — housing...</div>
+              <div class="note-item-date">May 22, 2026</div>
+            </div>
+            <div class="note-item" onclick="selectCase(this,'Priya S.','Developmental Resources')">
+              <div class="note-item-name">Priya S.</div>
+              <div class="note-item-preview">Child 18mo — delayed speech, referred to...</div>
+              <div class="note-item-date">May 21, 2026</div>
+            </div>
+            <div class="note-item" onclick="selectCase(this,'Destiny R.','Emergency Relief')">
+              <div class="note-item-name">Destiny R.</div>
+              <div class="note-item-preview">Emergency supplies requested, 2 children...</div>
+              <div class="note-item-date">May 19, 2026</div>
+            </div>
+            <div class="note-item" onclick="selectCase(this,'Courtney M.','Postpartum Support')">
+              <div class="note-item-name">Courtney M.</div>
+              <div class="note-item-preview">Self-referred, 6 weeks postpartum, no...</div>
+              <div class="note-item-date">May 18, 2026</div>
+            </div>
+          </div>
+          <div class="note-detail">
+            <div class="note-detail-header">
+              <div class="note-detail-name" id="caseClientName">Maria G.</div>
+              <div style="font-size:.82rem;color:var(--soft);margin-top:.2rem;" id="caseSupportType">Postpartum Support · <span class="badge badge-new">New</span></div>
+            </div>
+            <div id="caseNotesArea">
+              <div class="note-entry"><div class="note-entry-meta">Ashley M. · May 23, 2026 at 9:14 AM</div><div class="note-entry-text">Initial intake completed via phone. Client is 4 weeks postpartum, first-time mother. Reports feeling overwhelmed and isolated. No family support nearby. Referred her to postpartum wellness check-in program. Will schedule home visit for next week.</div></div>
+              <div class="note-entry"><div class="note-entry-meta">System · May 23, 2026 at 9:00 AM</div><div class="note-entry-text">New intake form submitted via website. Support type: Postpartum Support. Priority assigned: High.</div></div>
+            </div>
+            <div class="note-add-area">
+              <textarea class="note-textarea" id="newNoteText" placeholder="Add a confidential case note..."></textarea>
+              <div style="display:flex;gap:.8rem;margin-top:.6rem;">
+                <button class="btn-sm btn-primary-sm" onclick="addCaseNote()">Add Note</button>
+                <select class="btn-sm btn-outline-sm" id="caseStatusSelect" style="border-radius:.6rem;cursor:pointer;">
+                  <option>Update Status...</option>
+                  <option>New</option>
+                  <option>In Review</option>
+                  <option>Resolved</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WORKFLOWS -->
+      <div class="page" id="page-workflows">
+        <div style="margin-bottom:1.5rem;">
+          <div style="font-size:.88rem;color:var(--soft);line-height:1.7;">Configure automated workflows that trigger based on form submissions, status changes, and scheduled events. Toggle each workflow on or off.</div>
+        </div>
+        <div class="workflow-grid">
+          <div class="workflow-card">
+            <div class="workflow-icon">📧</div>
+            <div class="workflow-name">Auto Welcome Email</div>
+            <div class="workflow-desc">Sends a warm welcome email to new support requestors within 15 minutes of form submission.</div>
+            <div class="toggle-wrap"><span style="font-size:.82rem;color:var(--soft);">Active</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+          </div>
+          <div class="workflow-card">
+            <div class="workflow-icon">🔔</div>
+            <div class="workflow-name">Staff Intake Alert</div>
+            <div class="workflow-desc">Notifies admin via email when a new high-priority intake is submitted.</div>
+            <div class="toggle-wrap"><span style="font-size:.82rem;color:var(--soft);">Active</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+          </div>
+          <div class="workflow-card">
+            <div class="workflow-icon">🙋</div>
+            <div class="workflow-name">Volunteer Confirmation</div>
+            <div class="workflow-desc">Sends confirmation email when a volunteer application is received and assigns pending status.</div>
+            <div class="toggle-wrap"><span style="font-size:.82rem;color:var(--soft);">Active</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+          </div>
+          <div class="workflow-card">
+            <div class="workflow-icon">📅</div>
+            <div class="workflow-name">Weekly Summary Report</div>
+            <div class="workflow-desc">Sends admin a weekly digest every Monday with new cases, donations, and volunteer activity.</div>
+            <div class="toggle-wrap"><span style="font-size:.82rem;color:var(--soft);">Inactive</span><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+          </div>
+          <div class="workflow-card">
+            <div class="workflow-icon">💝</div>
+            <div class="workflow-name">Donor Thank You</div>
+            <div class="workflow-desc">Sends personalized thank-you email after each Zeffy donation is processed.</div>
+            <div class="toggle-wrap"><span style="font-size:.82rem;color:var(--soft);">Active</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+          </div>
+          <div class="workflow-card">
+            <div class="workflow-icon">⚠️</div>
+            <div class="workflow-name">Stale Case Alert</div>
+            <div class="workflow-desc">Flags cases that have been "In Review" for more than 7 days with no note update.</div>
+            <div class="toggle-wrap"><span style="font-size:.82rem;color:var(--soft);">Active</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ANALYTICS -->
+      <div class="page" id="page-analytics">
+        <div class="stats-grid" style="margin-bottom:1.5rem;">
+          <div class="stat-card"><div class="stat-label">Families Served YTD</div><div class="stat-num">214</div><div class="stat-sub">Goal: 400 by Dec 2026</div><div class="stat-icon">👨‍👩‍👧</div></div>
+          <div class="stat-card blue"><div class="stat-label">Total Donations YTD</div><div class="stat-num">$18,450</div><div class="stat-sub">↑ 34% vs last year</div><div class="stat-icon">💰</div></div>
+          <div class="stat-card green"><div class="stat-label">Volunteer Hours</div><div class="stat-num">612</div><div class="stat-sub">37 active volunteers</div><div class="stat-icon">🕐</div></div>
+          <div class="stat-card gold"><div class="stat-label">Care Packages</div><div class="stat-num">312</div><div class="stat-sub">Goal: 587 by Dec 2026</div><div class="stat-icon">🎁</div></div>
+        </div>
+        <div class="analytics-grid">
+          <div class="chart-card">
+            <div class="chart-title">Monthly Donations (2026)</div>
+            <div class="bar-chart" id="donationChart"></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Cases by Support Type</div>
+            <div class="donut-wrap">
+              <svg width="120" height="120" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="45" fill="none" stroke="#EEE7F2" stroke-width="18"/>
+                <circle cx="60" cy="60" r="45" fill="none" stroke="#B85C7A" stroke-width="18" stroke-dasharray="113 170" stroke-dashoffset="-28" transform="rotate(-90 60 60)"/>
+                <circle cx="60" cy="60" r="45" fill="none" stroke="#5A2D66" stroke-width="18" stroke-dasharray="68 215" stroke-dashoffset="-141" transform="rotate(-90 60 60)"/>
+                <circle cx="60" cy="60" r="45" fill="none" stroke="#D7A14A" stroke-width="18" stroke-dasharray="57 226" stroke-dashoffset="-209" transform="rotate(-90 60 60)"/>
+                <text x="60" y="64" text-anchor="middle" font-size="13" font-weight="700" fill="#5A2D66" font-family="Jost,sans-serif">214</text>
+              </svg>
+              <div class="donut-legend">
+                <div class="legend-item"><div class="legend-dot" style="background:#B85C7A;"></div>Postpartum (40%)</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#5A2D66;"></div>Developmental (24%)</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#D7A14A;"></div>Crisis/Emergency (20%)</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#EEE7F2;"></div>Other (16%)</div>
+              </div>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Volunteer Engagement by Role</div>
+            <div style="display:flex;flex-direction:column;gap:.8rem;">
+              <div><div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.3rem;"><span>Outreach Partners</span><span style="font-weight:600;">12</span></div><div style="background:var(--mist);border-radius:4px;height:8px;"><div style="background:var(--rose);width:65%;height:100%;border-radius:4px;"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.3rem;"><span>Childcare Support</span><span style="font-weight:600;">8</span></div><div style="background:var(--mist);border-radius:4px;height:8px;"><div style="background:var(--plum);width:43%;height:100%;border-radius:4px;"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.3rem;"><span>Workshop Facilitators</span><span style="font-weight:600;">6</span></div><div style="background:var(--mist);border-radius:4px;height:8px;"><div style="background:var(--gold);width:32%;height:100%;border-radius:4px;"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.3rem;"><span>Mentors</span><span style="font-weight:600;">5</span></div><div style="background:var(--mist);border-radius:4px;height:8px;"><div style="background:var(--rose);width:27%;height:100%;border-radius:4px;"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.3rem;"><span>Other Roles</span><span style="font-weight:600;">6</span></div><div style="background:var(--mist);border-radius:4px;height:8px;"><div style="background:var(--plum);width:32%;height:100%;border-radius:4px;"></div></div></div>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Program Impact Goals</div>
+            <div style="display:flex;flex-direction:column;gap:1rem;">
+              <div><div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.3rem;"><span>Care Packages (587 goal)</span><span style="font-weight:600;color:var(--plum);">312 / 587</span></div><div style="background:var(--mist);border-radius:4px;height:10px;"><div style="background:linear-gradient(90deg,var(--rose),var(--plum));width:53%;height:100%;border-radius:4px;"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.3rem;"><span>Families Served (400 goal)</span><span style="font-weight:600;color:var(--plum);">214 / 400</span></div><div style="background:var(--mist);border-radius:4px;height:10px;"><div style="background:linear-gradient(90deg,var(--rose),var(--plum));width:54%;height:100%;border-radius:4px;"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.3rem;"><span>Volunteers (90 goal)</span><span style="font-weight:600;color:var(--plum);">37 / 90</span></div><div style="background:var(--mist);border-radius:4px;height:10px;"><div style="background:linear-gradient(90deg,var(--rose),var(--plum));width:41%;height:100%;border-radius:4px;"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.3rem;"><span>Head Start Programs (15 goal)</span><span style="font-weight:600;color:var(--plum);">7 / 15</span></div><div style="background:var(--mist);border-radius:4px;height:10px;"><div style="background:linear-gradient(90deg,var(--rose),var(--plum));width:47%;height:100%;border-radius:4px;"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="addVolModal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Add Volunteer</div><button class="modal-close" onclick="closeModal('addVolModal')">✕</button></div>
+    <label class="modal-label">Full Name</label><input class="modal-input" placeholder="Full name">
+    <label class="modal-label">Email</label><input class="modal-input" type="email" placeholder="Email address">
+    <label class="modal-label">Phone</label><input class="modal-input" type="tel" placeholder="Phone number">
+    <label class="modal-label">Role / Area</label>
+    <select class="modal-input"><option>Select Role</option><option>Mentor</option><option>Childcare Support</option><option>Workshop Facilitator</option><option>Administrative Help</option><option>Community Outreach</option><option>Event Support</option><option>Counseling & Advocacy</option><option>Fundraising</option></select>
+    <div class="modal-footer"><button class="btn-sm btn-outline-sm" onclick="closeModal('addVolModal')">Cancel</button><button class="btn-sm btn-primary-sm">Add Volunteer</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addDonorModal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Add Donor Record</div><button class="modal-close" onclick="closeModal('addDonorModal')">✕</button></div>
+    <label class="modal-label">Name</label><input class="modal-input" placeholder="Donor name or organization">
+    <label class="modal-label">Email</label><input class="modal-input" type="email" placeholder="Email">
+    <label class="modal-label">Donation Amount</label><input class="modal-input" type="number" placeholder="$0.00">
+    <label class="modal-label">Donation Type</label>
+    <select class="modal-input"><option>One-time</option><option>Monthly</option><option>Institutional</option><option>Grant</option></select>
+    <label class="modal-label">Notes</label><textarea class="modal-textarea" placeholder="Additional notes..."></textarea>
+    <div class="modal-footer"><button class="btn-sm btn-outline-sm" onclick="closeModal('addDonorModal')">Cancel</button><button class="btn-sm btn-primary-sm">Save Donor</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addIntakeModal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">New Intake</div><button class="modal-close" onclick="closeModal('addIntakeModal')">✕</button></div>
+    <label class="modal-label">Client Name</label><input class="modal-input" placeholder="Client first name + last initial">
+    <label class="modal-label">Support Type</label>
+    <select class="modal-input"><option>Postpartum Support</option><option>Child Developmental Resources</option><option>Crisis Assistance</option><option>Emergency Relief</option><option>Life Skills Training</option><option>Other</option></select>
+    <label class="modal-label">Priority</label>
+    <select class="modal-input"><option>High</option><option>Medium</option><option>Low</option></select>
+    <label class="modal-label">Initial Notes</label><textarea class="modal-textarea" placeholder="Initial intake notes..."></textarea>
+    <div class="modal-footer"><button class="btn-sm btn-outline-sm" onclick="closeModal('addIntakeModal')">Cancel</button><button class="btn-sm btn-primary-sm">Create Intake</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="noteModal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="noteModalTitle">Add Note</div><button class="modal-close" onclick="closeModal('noteModal')">✕</button></div>
+    <label class="modal-label">Note</label>
+    <textarea class="modal-textarea" id="quickNoteText" placeholder="Enter case note..." style="min-height:140px;"></textarea>
+    <div class="modal-footer"><button class="btn-sm btn-outline-sm" onclick="closeModal('noteModal')">Cancel</button><button class="btn-sm btn-primary-sm" onclick="saveQuickNote()">Save Note</button></div>
+  </div>
+</div>
+
+<script>
+// AUTH
+const PASS='hope2026';
+function doLogin(){
+  const p=document.getElementById('loginPass').value;
+  if(p===PASS){
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('app').classList.add('visible');
+    buildDonationChart();
+  } else {
+    document.getElementById('loginErr').style.display='block';
+  }
+}
+function doLogout(){
+  document.getElementById('app').classList.remove('visible');
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('loginPass').value='';
+  document.getElementById('loginErr').style.display='none';
+}
+
+// NAVIGATION
+function showPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+  const titles={overview:'Dashboard Overview',volunteers:'Volunteer Management',donors:'Donor Tracking',intake:'Intake Management',casenotes:'Case Notes',workflows:'Automated Workflows',analytics:'Analytics & Impact'};
+  document.getElementById('pageTitle').textContent=titles[id]||id;
+}
+
+// MODALS
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+let currentNoteClient='';
+function openNoteModal(client){
+  currentNoteClient=client;
+  document.getElementById('noteModalTitle').textContent='Add Note — '+client;
+  document.getElementById('quickNoteText').value='';
+  openModal('noteModal');
+}
+function saveQuickNote(){
+  const txt=document.getElementById('quickNoteText').value.trim();
+  if(!txt)return;
+  alert('Note saved for '+currentNoteClient+':\n\n'+txt);
+  closeModal('noteModal');
+}
+
+// TABLE FILTER
+function filterTable(input,tbodyId){
+  const q=input.value.toLowerCase();
+  document.querySelectorAll('#'+tbodyId+' tr').forEach(row=>{
+    row.style.display=row.textContent.toLowerCase().includes(q)?'':'none';
+  });
+}
+
+// INTAKE FILTER
+function filterIntake(status,btn){
+  document.querySelectorAll('[onclick*="filterIntake"]').forEach(b=>b.className='btn-sm btn-outline-sm');
+  btn.className='btn-sm btn-primary-sm';
+  document.querySelectorAll('#intake-tbody tr').forEach(row=>{
+    row.style.display=(status==='all'||row.dataset.status===status)?'':'none';
+  });
+}
+
+// CASE NOTES
+function selectCase(el,name,type){
+  document.querySelectorAll('.note-item').forEach(n=>n.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('caseClientName').textContent=name;
+  document.getElementById('caseSupportType').innerHTML=type+' · <span class="badge badge-review">In Review</span>';
+}
+
+function addCaseNote(){
+  const txt=document.getElementById('newNoteText').value.trim();
+  if(!txt)return;
+  const now=new Date();
+  const dateStr=now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+' at '+now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  const entry=document.createElement('div');
+  entry.className='note-entry';
+  entry.innerHTML=`<div class="note-entry-meta">Admin · ${dateStr}</div><div class="note-entry-text">${txt}</div>`;
+  document.getElementById('caseNotesArea').prepend(entry);
+  document.getElementById('newNoteText').value='';
+}
+
+// VOLUNTEER APPROVE
+function approveVol(btn){
+  const row=btn.closest('tr');
+  row.querySelector('.badge').textContent='Active';
+  row.querySelector('.badge').className='badge badge-active';
+  btn.textContent='Notes';
+  btn.className='btn-sm btn-outline-sm';
+  btn.onclick=null;
+}
+
+// DONATION CHART
+function buildDonationChart(){
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const vals=[820,1100,950,1350,4820,0,0,0,0,0,0,0];
+  const maxV=Math.max(...vals);
+  const c=document.getElementById('donationChart');
+  if(!c)return;
+  c.innerHTML='';
+  months.forEach((m,i)=>{
+    const pct=maxV>0&&vals[i]>0?(vals[i]/maxV*100):4;
+    const wrap=document.createElement('div');
+    wrap.className='bar-wrap';
+    wrap.innerHTML=`
+      ${vals[i]>0?`<div class="bar-val">$${vals[i].toLocaleString()}</div>`:'<div class="bar-val" style="opacity:0">-</div>'}
+      <div class="bar" style="background:${vals[i]>0?'linear-gradient(to top,var(--plum),var(--rose))':'#EEE7F2'};height:${pct}%;"></div>
+      <div class="bar-label">${m}</div>`;
+    c.appendChild(wrap);
+  });
+}
+
+// MODAL CLOSE ON BACKDROP
+document.querySelectorAll('.modal-overlay').forEach(overlay=>{
+  overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.classList.remove('open');});
+});
+</script>
+</body>
+</html>
