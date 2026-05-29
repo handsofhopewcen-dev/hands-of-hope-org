@@ -90,7 +90,7 @@ export function Hero() {
                 color: 'var(--rose)',
                 padding: '0.55rem 1.1rem',
                 borderRadius: '100px',
-                fontSize: '1.06rem',
+                fontSize: '0.72rem',
                 fontWeight: 600,
                 textTransform: 'uppercase',
                 letterSpacing: '0.1em',
