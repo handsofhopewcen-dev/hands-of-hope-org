@@ -53,6 +53,7 @@ export function DonationProvider({ children }: { children: React.ReactNode }) {
               exit={{ scale: 0.92, y: 24, opacity: 0 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               onClick={(e) => e.stopPropagation()}
+              className="donation-modal-inner"
               style={{
                 background: '#fff',
                 borderRadius: '1.8rem',
@@ -69,7 +70,7 @@ export function DonationProvider({ children }: { children: React.ReactNode }) {
               <div
                 style={{
                   background: 'linear-gradient(135deg, var(--plum-deep) 0%, var(--plum) 100%)',
-                  padding: '1.6rem 2rem',
+                  padding: 'clamp(1rem, 3vw, 1.6rem) clamp(1rem, 4vw, 2rem)',
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'flex-start',
@@ -141,10 +142,22 @@ export function DonationProvider({ children }: { children: React.ReactNode }) {
                 <iframe
                   title="Hands of Hope Donation Form"
                   src="https://www.zeffy.com/embed/donation-form/donate-to-change-lives-14499"
+                  className="zeffy-iframe"
                   style={{ width: '100%', height: '700px', border: 'none', display: 'block' }}
                   allow="payment"
                 />
               </div>
+              <style>{`
+                @media (max-width: 768px) {
+                  .donation-modal-inner {
+                    max-height: 82vh !important;
+                    border-radius: 1.2rem !important;
+                  }
+                  .zeffy-iframe {
+                    height: 480px !important;
+                  }
+                }
+              `}</style>
 
               {/* Footer note */}
               <div
