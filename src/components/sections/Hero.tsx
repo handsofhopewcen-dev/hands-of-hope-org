@@ -331,6 +331,23 @@ export function Hero() {
                 </span>
               </div>
             </motion.div>
+
+
+            {/* Mobile stat cards — shown below image on small screens */}
+            <div className="hero-mobile-stats">
+              <div className="hero-mobile-stat-card">
+                <p style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: '0.97rem', fontStyle: 'italic', color: 'var(--ink)', lineHeight: 1.6, marginBottom: '0.5rem' }}>
+                  More than one-third of women experience lasting health problems after childbirth — yet most never receive follow-up care.
+                </p>
+                <span style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--soft-text)' }}>— World Health Organization</span>
+              </div>
+              <div className="hero-mobile-stat-card">
+                <p style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: '0.97rem', fontStyle: 'italic', color: 'var(--ink)', lineHeight: 1.6, marginBottom: '0.5rem' }}>
+                  1 in 6 children in the US have a developmental delay. Fewer than half are identified before starting school.
+                </p>
+                <span style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--soft-text)' }}>— Nat. Center on Birth Defects & Developmental Disabilities, CDC</span>
+              </div>
+            </div>
           </div>
         </ScrollReveal>
       </div>
@@ -344,6 +361,29 @@ export function Hero() {
           section > div[style*="grid-template-columns"] > div:last-child {
             order: -1;
           }
+        }
+        .hero-mobile-stats {
+          display: none;
+        }
+        @media (max-width: 1023px) {
+          .hero-mobile-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+            margin-top: 1rem;
+          }
+        }
+        @media (max-width: 560px) {
+          .hero-mobile-stats {
+            grid-template-columns: 1fr;
+          }
+        }
+        .hero-mobile-stat-card {
+          background: rgba(255,255,255,0.85);
+          border: 1px solid var(--line);
+          border-radius: 1rem;
+          padding: 1rem;
+          backdrop-filter: blur(8px);
         }
       `}</style>
     </section>
