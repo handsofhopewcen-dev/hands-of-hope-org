@@ -427,7 +427,8 @@ export function NeedIsReal() {
               lineHeight: 1.45,
             }}
           >
-            Every statistic tells a story.{' '}
+            Every statistic tells a story.
+            <span className="tagline-break"> </span>
             <span style={{ color: 'var(--rose)', fontStyle: 'italic' }}>
               Together, we can change outcomes.
             </span>
@@ -436,6 +437,10 @@ export function NeedIsReal() {
       </div>
 
       <style>{`
+        .tagline-break { display: inline; }
+        @media (max-width: 768px) {
+          .tagline-break { display: block; }
+        }
         @media (max-width: 1024px) {
           .need-insight-grid {
             grid-template-columns: 1fr 1fr !important;
