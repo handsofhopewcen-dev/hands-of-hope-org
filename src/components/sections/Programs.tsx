@@ -19,9 +19,9 @@ const programs = [
     color: 'var(--plum)',
   },
   {
-    icon: '🧠',
-    title: 'Pediatric Development & Caregiver Support',
-    desc: 'Educate caregivers on developmental milestones, early screening awareness, developmental concern referrals, school readiness, and functional independence.',
+    icon: '🔬',
+    title: 'Pediatric OT Free Screening Initiative',
+    desc: 'Free developmental screenings for children birth–5, led by a Licensed Pediatric Occupational Therapist. Early identification of delays means earlier intervention — and better lifelong outcomes.',
     color: 'var(--gold)',
   },
   {
@@ -31,9 +31,9 @@ const programs = [
     color: 'var(--rose)',
   },
   {
-    icon: '💪',
-    title: 'Maternal Wellness & Family Empowerment',
-    desc: 'Workshops and coaching to build parenting confidence, healthy relationships, stress management, and postpartum life skills.',
+    icon: '📚',
+    title: 'Parent & Caregiver Education',
+    desc: 'Workshops and coaching on developmental milestones, school readiness, responsive parenting, stress management, and building healthy family routines for long-term wellbeing.',
     color: 'var(--plum)',
   },
   {
@@ -89,8 +89,8 @@ export function Programs() {
             }}
           >
             Every program we offer was built in response to gaps we saw in our
-            community. From the third trimester through early childhood, we are
-            there.
+            community. From the third trimester through age 5 — the most critical
+            window for development — we are there.
           </p>
         </ScrollReveal>
 

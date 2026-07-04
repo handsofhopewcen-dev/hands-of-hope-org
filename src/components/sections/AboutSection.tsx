@@ -9,11 +9,11 @@ import { ScrollReveal, StaggerContainer, StaggerItem } from '@/components/ui/Scr
 const missionCards = [
   {
     title: 'Our Mission',
-    body: 'Empowering postpartum mothers, strengthening families, transforming futures — one child and one mother at a time.',
+    body: 'To connect women and children with compassionate support, practical resources, education, and community-centered care that fosters healing, empowerment, stability, and hope.',
   },
   {
     title: 'Our Vision',
-    body: 'Increase outreach efforts and become a trusted resource hub for postpartum mothers and children in need of developmental support.',
+    body: 'To build thriving communities where every mother is supported, every child reaches their developmental potential, and every family has equitable access to life-changing resources and care.',
   },
 ]
 
@@ -124,13 +124,10 @@ export function AboutSection() {
               lineHeight: 1.95,
               color: 'var(--soft-text)',
               fontSize: '1rem',
-              marginBottom: '2rem',
+              marginBottom: '1.4rem',
             }}
           >
-            Hands of Hope Women and Children Empowerment Network was created to
-            support postpartum mothers, underserved children, and families
-            facing difficult seasons through compassionate care, practical
-            resources, education, and advocacy.
+            Hands of Hope was founded by <strong style={{ color: 'var(--ink)', fontWeight: 600 }}>Dierdre Adeniyi, OTR/L</strong> — a licensed Pediatric Occupational Therapist with nearly a decade of clinical experience, and a first-time mom to twins. She witnessed two distinct realities: the clinical gaps in early childhood developmental care, and the emotional isolation mothers face postpartum. Hands of Hope was born from that intersection — bridging compassionate maternal support with evidence-based pediatric care for children birth through age 5.
           </p>
 
           <StaggerContainer
@@ -179,6 +176,47 @@ export function AboutSection() {
               </StaggerItem>
             ))}
           </StaggerContainer>
+
+          {/* Founder credential strip */}
+          <div
+            style={{
+              marginTop: '1.6rem',
+              background: 'linear-gradient(135deg, rgba(90,45,102,.06), rgba(184,92,122,.06))',
+              border: '1px solid rgba(90,45,102,.15)',
+              borderRadius: '1.2rem',
+              padding: '1.1rem 1.4rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem',
+            }}
+          >
+            <div
+              style={{
+                width: '44px',
+                height: '44px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, var(--plum), var(--rose))',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+                fontSize: '1.1rem',
+              }}
+            >
+              🩺
+            </div>
+            <div>
+              <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--rose)', marginBottom: '0.18rem' }}>
+                Founded &amp; Led By
+              </div>
+              <div style={{ fontWeight: 600, color: 'var(--ink)', fontSize: '0.95rem' }}>
+                Dierdre Adeniyi, OTR/L
+              </div>
+              <div style={{ fontSize: '0.8rem', color: 'var(--soft-text)', lineHeight: 1.5 }}>
+                Licensed Pediatric Occupational Therapist · Nearly 10 years clinical experience
+              </div>
+            </div>
+          </div>
 
           <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
             <a href="#programs" className="btn btn-primary">

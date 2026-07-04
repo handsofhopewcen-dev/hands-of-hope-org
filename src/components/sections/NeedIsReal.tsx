@@ -8,38 +8,38 @@ import { ScrollReveal, StaggerContainer, StaggerItem } from '@/components/ui/Scr
 /* ── Supporting insight cards (image-backed) ────────────────── */
 const insightCards = [
   {
-    headline: 'Women frequently report feeling forgotten after delivery',
-    body: 'Emotionally unsupported, unprepared for postpartum recovery, and isolated during the transition into motherhood.',
-    source: 'Research and Maternal Testimony Studies',
+    headline: '64% of U.S. women believe mothers are forgotten after childbirth',
+    body: 'Emotionally unsupported, unprepared for postpartum recovery, and isolated during one of life\'s most vulnerable seasons.',
+    source: 'Harris Poll, 2024',
     image: '/womenforgotten.jpg',
     imageAlt: 'A mother sitting alone with her newborn, looking emotionally exhausted',
     imagePosition: 'center 25%',
     overlay: 'linear-gradient(to top, rgba(90,29,60,.88) 0%, rgba(90,29,60,.45) 45%, rgba(90,29,60,.1) 100%)',
   },
   {
-    headline: 'No family should navigate postpartum struggles alone',
-    body: 'Many women report insufficient follow-up and support after childbirth, particularly beyond the immediate recovery period.',
-    source: 'Research and Maternal Testimony Studies',
+    headline: '75% of women with postpartum depression never receive treatment',
+    body: '74% of U.S. women say postpartum healthcare is not sufficiently prioritized — leaving mothers to struggle in silence.',
+    source: 'MMHLA; Harris Poll, 2024',
     image: '/navigatealone.jpg',
     imageAlt: 'A group of women gathered together in mutual support',
     imagePosition: 'center center',
     overlay: 'linear-gradient(to top, rgba(61,29,71,.88) 0%, rgba(61,29,71,.4) 45%, rgba(61,29,71,.08) 100%)',
   },
   {
-    headline: 'Social support functions as a critical coping resource',
-    body: 'Emotional, practical, and community support are protective factors that significantly improve maternal well-being.',
-    source: 'BMC Psychology Review',
+    headline: 'Children in poverty are 2× more likely to experience developmental delays',
+    body: 'Economic hardship compounds developmental risk — yet early intervention can change the trajectory of a child\'s entire life.',
+    source: 'CDC, 2024',
     image: '/SocialSupport.jpg',
     imageAlt: 'Two women sharing a warm, supportive moment together',
     imagePosition: 'center 20%',
     overlay: 'linear-gradient(to top, rgba(35,20,55,.88) 0%, rgba(35,20,55,.4) 45%, rgba(35,20,55,.08) 100%)',
   },
   {
-    headline: '1 in 8 women report symptoms of postpartum depression',
-    body: 'Lack of emotional and practical support is one of the strongest contributing risk factors for postpartum mental health decline.',
-    source: 'CDC Reproductive Health Division',
+    headline: '~50% of Texas kindergarteners are not meeting school readiness benchmarks',
+    body: 'Missed developmental milestones in the first 5 years have lasting consequences for school success and lifelong outcomes.',
+    source: 'Texas Education Agency, 2024–2025',
     image: '/Iin8copy.jpg',
-    imageAlt: 'A woman sitting alone, looking quietly overwhelmed',
+    imageAlt: 'A young child sitting thoughtfully, representing early childhood development',
     imagePosition: 'center 15%',
     overlay: 'linear-gradient(to top, rgba(30,18,48,.90) 0%, rgba(30,18,48,.45) 45%, rgba(30,18,48,.1) 100%)',
   },
@@ -189,7 +189,7 @@ export function NeedIsReal() {
                     marginBottom: '1.2rem',
                   }}
                 >
-                  experience lasting health problems after childbirth — yet most never receive the follow-up care they need.
+                  experience lasting health problems after childbirth — yet 75% of those with postpartum depression never receive treatment.
                 </p>
                 <div
                   style={{
@@ -211,7 +211,7 @@ export function NeedIsReal() {
                       display: 'block',
                     }}
                   />
-                  World Health Organization
+                  WHO · MMHLA · CDC
                 </div>
               </div>
             </motion.div>
@@ -288,7 +288,7 @@ export function NeedIsReal() {
                     marginBottom: '1.2rem',
                   }}
                 >
-                  in the US have a developmental delay or disability. Fewer than half are identified before starting school.
+                  in the US have a developmental delay or disability — and children in poverty face 2× the risk. Early screening changes everything.
                 </p>
                 <div
                   style={{
@@ -310,7 +310,7 @@ export function NeedIsReal() {
                       display: 'block',
                     }}
                   />
-                  National Center on Birth Defects and Developmental Disabilities, CDC
+                  National Center on Birth Defects &amp; Developmental Disabilities, CDC
                 </div>
               </div>
             </motion.div>
