@@ -25,7 +25,7 @@ const involvedLinks: { href: string; label: string; external?: boolean }[] = [
 ]
 
 const contactLinks = [
-  { label: '954-830-6030' },
+  { label: '806-302-0899' },
   { label: 'info@handsofhopewcen.org' },
   { label: 'Greater Houston, TX' },
   { label: 'Mon–Fri | 9AM–5PM CT' },

@@ -9,7 +9,7 @@ import type { ContactInput } from '@/types'
 const contactInfo = [
   { icon: '📍', label: 'Location', value: 'Greater Houston, Texas, United States' },
   { icon: '📧', label: 'Email', value: 'info@handsofhopewcen.org', href: 'mailto:info@handsofhopewcen.org' },
-  { icon: '📞', label: 'Phone', value: '954-830-6030', href: 'tel:9548306030' },
+  { icon: '📞', label: 'Phone', value: '806-302-0899', href: 'tel:8063020899' },
   { icon: '🕐', label: 'Office Hours', value: 'Monday – Friday | 9AM – 5PM CT' },
 ]
 
