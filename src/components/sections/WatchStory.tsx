@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { ScrollReveal } from '@/components/ui/ScrollReveal'
 
@@ -23,46 +22,7 @@ const storyPoints = [
   },
 ]
 
-const FLOAT_WIDTH = 340
-const FLOAT_HEIGHT = Math.round(FLOAT_WIDTH * 9 / 16)
-const FLOAT_HEADER = 38
-
 export function WatchStory() {
-  const [videoLoaded, setVideoLoaded] = useState(false)
-  const [isFloating, setIsFloating] = useState(false)
-  const [dismissed, setDismissed] = useState(false)
-  const sectionRef = useRef<HTMLDivElement>(null)
-
-  /* ── Auto-load on scroll in; float when scrolled past ───── */
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVideoLoaded(true)           // autoplay as section enters view
-          if (!dismissed) setIsFloating(false)
-        } else {
-          if (!dismissed) setIsFloating(true) // float when section leaves view
-        }
-      },
-      { threshold: 0.25 }
-    )
-    if (sectionRef.current) observer.observe(sectionRef.current)
-    return () => observer.disconnect()
-  }, [dismissed])
-
-  function dismiss() {
-    setDismissed(true)
-    setIsFloating(false)
-  }
-
-  function scrollBackAndExpand() {
-    setIsFloating(false)
-    document.getElementById('watch')?.scrollIntoView({ behavior: 'smooth' })
-  }
-
-  const vimeoSrc =
-    'https://player.vimeo.com/video/1196456084?autoplay=1&loop=1&title=0&byline=0&portrait=0'
-
   return (
     <section
       id="watch"
@@ -111,100 +71,186 @@ export function WatchStory() {
           </div>
         </ScrollReveal>
 
-        {/* Video container — keeps layout space; iframe moves via CSS */}
+        {/* ── Cinematic Story Teaser (replaces video until ready) ── */}
         <ScrollReveal direction="up" delay={0.1}>
-          <div ref={sectionRef}>
+          <motion.div
+            style={{
+              position: 'relative',
+              borderRadius: '2rem',
+              overflow: 'hidden',
+              aspectRatio: '16/9',
+              boxShadow: 'var(--shadow-xl)',
+              marginBottom: '3.5rem',
+              cursor: 'default',
+            }}
+            whileHover={{ scale: 1.008 }}
+            transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+          >
+            {/* Background image */}
+            <Image
+              src="https://images.unsplash.com/photo-1609220136736-443140cffec6?q=80&w=1600&auto=format&fit=crop"
+              alt="A mother holding her child — Hands of Hope story"
+              fill
+              className="object-cover"
+              style={{ objectPosition: 'center 30%' }}
+              sizes="100vw"
+            />
+
+            {/* Multi-layer cinematic gradient */}
             <div
               style={{
-                borderRadius: '2rem',
-                overflow: isFloating ? 'visible' : 'hidden',
-                boxShadow: isFloating ? 'none' : 'var(--shadow-xl)',
-                position: 'relative',
-                aspectRatio: '16/9',
-                background: isFloating ? 'transparent' : '#1a0a15',
-                marginBottom: '3.5rem',
+                position: 'absolute',
+                inset: 0,
+                background:
+                  'linear-gradient(135deg, rgba(35,10,45,.88) 0%, rgba(61,29,71,.70) 45%, rgba(90,29,60,.55) 100%)',
+              }}
+            />
+
+            {/* Subtle grain texture overlay */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\' opacity=\'0.04\'/%3E%3C/svg%3E")',
+                opacity: 0.4,
+                pointerEvents: 'none',
+              }}
+            />
+
+            {/* Content */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: 'clamp(2rem, 5vw, 4rem)',
+                textAlign: 'center',
               }}
             >
-              {/* Placeholder shown when floating so layout doesn't collapse */}
-              {isFloating && (
+              {/* "Coming Soon" badge */}
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2, duration: 0.6 }}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.55rem',
+                  background: 'rgba(215,161,74,.18)',
+                  border: '1px solid rgba(215,161,74,.45)',
+                  borderRadius: '100px',
+                  padding: '0.45rem 1.1rem',
+                  marginBottom: '2rem',
+                }}
+              >
+                <span
+                  style={{
+                    width: '7px',
+                    height: '7px',
+                    borderRadius: '50%',
+                    background: 'var(--gold)',
+                    display: 'block',
+                    animation: 'pulseDot 2s infinite',
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: '0.7rem',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.14em',
+                    color: 'var(--gold-light)',
+                  }}
+                >
+                  Story Coming Soon
+                </span>
+              </motion.div>
+
+              {/* Headline */}
+              <motion.h3
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.35, duration: 0.7 }}
+                style={{
+                  fontFamily: '"Cormorant Garamond", serif',
+                  fontSize: 'clamp(1.7rem, 4vw, 3.4rem)',
+                  fontWeight: 700,
+                  color: '#fff',
+                  lineHeight: 1.18,
+                  maxWidth: '680px',
+                  marginBottom: '2rem',
+                }}
+              >
+                Our story is being written —{' '}
+                <span style={{ color: 'var(--gold-light)', fontStyle: 'italic' }}>
+                  one life at a time.
+                </span>
+              </motion.h3>
+
+              {/* Founder quote */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5, duration: 0.7 }}
+                style={{
+                  maxWidth: '560px',
+                  background: 'rgba(255,255,255,.07)',
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  border: '1px solid rgba(255,255,255,.14)',
+                  borderRadius: '1.2rem',
+                  padding: 'clamp(1.2rem, 3vw, 1.8rem) clamp(1.4rem, 4vw, 2rem)',
+                }}
+              >
+                <p
+                  style={{
+                    fontFamily: '"Cormorant Garamond", serif',
+                    fontSize: 'clamp(1rem, 2vw, 1.22rem)',
+                    fontStyle: 'italic',
+                    color: 'rgba(255,255,255,.92)',
+                    lineHeight: 1.75,
+                    marginBottom: '1rem',
+                  }}
+                >
+                  "I started Hands of Hope because I lived in two worlds — as a therapist who saw children being missed, and as a new mother who felt the isolation myself. This is why we exist."
+                </p>
                 <div
                   style={{
-                    position: 'absolute',
-                    inset: 0,
-                    borderRadius: '2rem',
-                    background: 'var(--mist)',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    border: '2px dashed var(--line)',
+                    gap: '0.6rem',
                   }}
-                  onClick={scrollBackAndExpand}
                 >
-                  <span style={{ color: 'var(--soft-text)', fontSize: '0.9rem', fontWeight: 600 }}>
-                    ▶ Video is playing in mini-player ↘
+                  <span
+                    style={{
+                      width: '24px',
+                      height: '1.5px',
+                      background: 'var(--gold)',
+                      display: 'block',
+                      flexShrink: 0,
+                    }}
+                  />
+                  <span
+                    style={{
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.1em',
+                      color: 'var(--gold-light)',
+                    }}
+                  >
+                    Dierdre Adeniyi, OTR/L · Founder &amp; Executive Director
                   </span>
                 </div>
-              )}
-
-              {/* Thumbnail / play button — before video loads */}
-              {!videoLoaded && (
-                <>
-                  <Image
-                    src="https://images.unsplash.com/photo-1609220136736-443140cffec6?q=80&w=1400&auto=format&fit=crop"
-                    alt="Our story thumbnail"
-                    fill
-                    className="object-cover"
-                  />
-                  <motion.div
-                    className="absolute inset-0 flex items-center justify-center cursor-pointer"
-                    style={{ background: 'linear-gradient(135deg, rgba(61,29,71,.72), rgba(184,92,122,.3))' }}
-                    onClick={() => setVideoLoaded(true)}
-                    whileHover={{ background: 'linear-gradient(135deg, rgba(61,29,71,.5), rgba(184,92,122,.2))' }}
-                  >
-                    <motion.div
-                      style={{ width: '96px', height: '96px', background: 'rgba(255,255,255,.96)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-lg)' }}
-                      whileHover={{ scale: 1.12 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor" style={{ color: 'var(--plum)', marginLeft: '6px' }}>
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    </motion.div>
-                  </motion.div>
-                </>
-              )}
-
-              {/* ── SINGLE IFRAME — position switches via CSS ── */}
-              {videoLoaded && (
-                <iframe
-                  src={vimeoSrc}
-                  allow="autoplay; fullscreen; picture-in-picture"
-                  allowFullScreen
-                  style={
-                    isFloating
-                      ? {
-                          position: 'fixed',
-                          bottom: '16px',
-                          right: '1.8rem',
-                          width: `${FLOAT_WIDTH}px`,
-                          height: `${FLOAT_HEIGHT}px`,
-                          border: 'none',
-                          zIndex: 9999,
-                          borderRadius: '0 0 1.2rem 1.2rem',
-                        }
-                      : {
-                          position: 'absolute',
-                          inset: 0,
-                          width: '100%',
-                          height: '100%',
-                          border: 'none',
-                        }
-                  }
-                />
-              )}
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
         </ScrollReveal>
 
         {/* Story points */}
@@ -241,65 +287,6 @@ export function WatchStory() {
         </ScrollReveal>
       </div>
 
-      {/* ── Floating mini-player header bar ─────────────────── */}
-      <AnimatePresence>
-        {isFloating && videoLoaded && (
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 30 }}
-            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-            style={{
-              position: 'fixed',
-              bottom: `${16 + FLOAT_HEIGHT}px`,
-              right: '1.8rem',
-              width: `${FLOAT_WIDTH}px`,
-              zIndex: 9999,
-              borderRadius: '1.2rem 1.2rem 0 0',
-              background: 'var(--plum-deep)',
-              padding: '0 0.9rem',
-              height: `${FLOAT_HEADER}px`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              boxShadow: '0 -4px 24px rgba(35,23,31,.2)',
-            }}
-          >
-            <span style={{ fontSize: '0.74rem', fontWeight: 600, color: 'rgba(255,255,255,.85)', fontFamily: '"Jost", sans-serif', letterSpacing: '0.04em', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', maxWidth: '160px' }}>
-              Our Story — Hands of Hope
-            </span>
-
-            <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
-
-              {/* Expand back */}
-              <button
-                onClick={scrollBackAndExpand}
-                title="Expand"
-                style={{ background: 'rgba(255,255,255,.12)', border: 'none', borderRadius: '0.4rem', width: '26px', height: '26px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#fff' }}
-              >
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="15 3 21 3 21 9" />
-                  <polyline points="9 21 3 21 3 15" />
-                  <line x1="21" y1="3" x2="14" y2="10" />
-                  <line x1="3" y1="21" x2="10" y2="14" />
-                </svg>
-              </button>
-
-              {/* Close */}
-              <button
-                onClick={dismiss}
-                title="Close"
-                style={{ background: 'rgba(255,255,255,.12)', border: 'none', borderRadius: '0.4rem', width: '26px', height: '26px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#fff' }}
-              >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                  <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <style>{`
         @media (max-width: 768px) {
           .watch-points { grid-template-columns: 1fr !important; }
@@ -311,3 +298,16 @@ export function WatchStory() {
     </section>
   )
 }
+
+/*
+ * ── RESTORE VIDEO ─────────────────────────────────────────────────────────────
+ * When the Our Story video is ready, replace the "Cinematic Story Teaser" block
+ * above with the original video player. The full original WatchStory component
+ * (with Vimeo embed, floating mini-player, and autoplay-on-scroll logic) is
+ * preserved in git history — run:
+ *
+ *   git show HEAD~2:src/components/sections/WatchStory.tsx
+ *
+ * to retrieve it, or just ask Claude to restore the video version.
+ * ─────────────────────────────────────────────────────────────────────────────
+ */
