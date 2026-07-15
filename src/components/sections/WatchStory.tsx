@@ -218,7 +218,7 @@ export function WatchStory() {
                     marginBottom: '1rem',
                   }}
                 >
-                  "I started Hands of Hope because I lived in two worlds — as a therapist who saw children being missed, and as a new mother who felt the isolation myself. This is why we exist."
+                  "Hands of Hope was born out of two distinct realities I live every day: my professional career as a licensed Pediatric Occupational Therapist with nearly ten years of experience, and my personal journey as a first-time mom to twins."
                 </p>
                 <div
                   style={{
