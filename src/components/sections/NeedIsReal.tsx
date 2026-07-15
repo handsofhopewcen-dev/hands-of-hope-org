@@ -130,11 +130,11 @@ export function NeedIsReal() {
               transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
             >
               <Image
-                src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=900&auto=format&fit=crop&crop=faces,top"
-                alt="A woman sitting alone, quietly overwhelmed after childbirth"
+                src="/women-1in3.jpg"
+                alt="Three women with serious, contemplative expressions — 1 in 3 experience lasting health problems after childbirth"
                 fill
                 className="object-cover"
-                style={{ objectPosition: 'center 20%' }}
+                style={{ objectPosition: 'center 25%' }}
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
               {/* Multi-layer gradient overlay */}
