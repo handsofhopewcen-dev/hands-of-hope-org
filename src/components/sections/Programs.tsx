@@ -21,7 +21,7 @@ const programs = [
   {
     icon: '🔬',
     title: 'Pediatric OT Free Screening Initiative',
-    desc: 'Free professional OT screenings embedded into Head Start campuses, daycares, and pediatricians\' offices. Identifying developmental delays early so no child falls through the cracks.',
+    desc: 'Free professional OT screenings embedded into partner Head Start campuses, daycares, and pediatricians\' offices. Identifying developmental delays early so no child falls through the cracks.',
     color: 'var(--gold)',
   },
   {
