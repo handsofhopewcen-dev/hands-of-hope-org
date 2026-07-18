@@ -15,7 +15,7 @@ const programs = [
   {
     icon: '🤱',
     title: 'Postpartum Recovery & Care',
-    desc: 'Postpartum recovery support, emotional wellness check-ins, newborn transition support, nutritious meals, respite care, and safe infant care practices.',
+    desc: 'Postpartum recovery support, emotional wellness check-ins, newborn transition guidance, nutritious meals, diapers, hygiene supplies, infant essentials, respite care, and safe infant care education.',
     color: 'var(--plum)',
   },
   {
