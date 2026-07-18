@@ -25,9 +25,9 @@ const programs = [
     color: 'var(--gold)',
   },
   {
-    icon: '🛍️',
-    title: 'Essential Family Needs Assistance',
-    desc: 'Provide diapers, hygiene items, infant essentials, and connect families to trusted community resources.',
+    icon: '🎓',
+    title: 'Kindergarten Readiness & Developmental Support',
+    desc: 'On-site Occupational Therapist provides monthly developmental education and weekly classroom activities supporting Kindergarten readiness and developmental skills for all children.',
     color: 'var(--rose)',
   },
   {
