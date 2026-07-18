@@ -21,7 +21,7 @@ const programs = [
   {
     icon: '🔬',
     title: 'Pediatric OT Free Screening Initiative',
-    desc: 'Free developmental screenings for children birth–5, led by a Licensed Pediatric Occupational Therapist. Early identification of delays means earlier intervention — and better lifelong outcomes.',
+    desc: 'Free professional OT screenings embedded into Head Start campuses, daycares, and pediatricians\' offices. Identifying developmental delays early so no child falls through the cracks.',
     color: 'var(--gold)',
   },
   {
